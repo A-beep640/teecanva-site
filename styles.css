@@ -148,7 +148,7 @@ footer { background: var(--green-dark); color: #fff; padding: 56px 32px 28px; }
 .about-grid h2 { color: var(--green); font-size: clamp(26px, 3.4vw, 36px); margin-bottom: 20px; }
 .about-grid p { color: var(--muted); font-size: 17px; margin-bottom: 18px; }
 .about-card { background: var(--bg-alt); border-radius: var(--radius); padding: 32px 28px; text-align: center; }
-$0
+.photo-placeholder { width: 150px; height: 150px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; margin: 0 auto 20px; border: 4px solid var(--gold); }
 .founder-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 20px; border: 4px solid var(--gold); }
 .about-card h3 { color: var(--green); font-size: 22px; }
 .about-card .role { color: var(--gold-dark); font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin: 6px 0 14px; }
