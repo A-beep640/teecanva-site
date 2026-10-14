@@ -1,12 +1,14 @@
 :root {
-  --green: #0d5c2f;
-  --green-dark: #09401f;
-  --gold: #f0b429;
-  --gold-dark: #d99e1f;
-  --ink: #1e2a24;
-  --muted: #5f6f66;
-  --bg: #ffffff;
-  --bg-alt: #f6f8f5;
+  /* Teecanva brand palette — Brand Identity guide, p.22 (April 2023) */
+  --green: #165B33;       /* Green-Cyan */
+  --green-dark: #0E3D22;  /* darker tone of Green-Cyan for gradients */
+  --gold: #FFC41F;        /* Ripe Mango Yellow */
+  --gold-dark: #D9A400;   /* darker tone of Ripe Mango Yellow */
+  --red: #BF2121;         /* Firebrick Red — brand accent */
+  --ink: #000000;         /* BLACK */
+  --muted: #555555;
+  --bg: #FFFDF7;          /* Ceramic White */
+  --bg-alt: #F7F3EA;
   --radius: 14px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,7 +37,7 @@ a { text-decoration: none; }
 
 /* Buttons */
 .btn { display: inline-block; padding: 12px 26px; border-radius: 999px; font-weight: 700; font-size: 15px; border: 2px solid transparent; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(13,92,47,.18); }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(22,91,51,.18); }
 .btn-gold { background: var(--gold); color: var(--green-dark); }
 .btn-gold:hover { background: var(--gold-dark); }
 .btn-green { background: var(--green); color: #fff; }
@@ -65,7 +67,7 @@ a { text-decoration: none; }
 /* Cards */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
 .card { background: #fff; border: 1px solid #e4eae5; border-radius: var(--radius); padding: 36px 30px; transition: transform .15s ease, box-shadow .15s ease; }
-.card:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(13,92,47,.12); }
+.card:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(22,91,51,.12); }
 .card-icon { font-size: 40px; margin-bottom: 16px; }
 .card h3 { font-size: 22px; color: var(--green); margin-bottom: 12px; }
 .card p { color: var(--muted); font-size: 16px; margin-bottom: 18px; }
@@ -82,7 +84,7 @@ a { text-decoration: none; }
 /* Pricing */
 .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
 .price-card { border: 2px solid #e4eae5; border-radius: var(--radius); padding: 32px 26px; text-align: center; background: #fff; }
-.price-card.featured { border-color: var(--gold); box-shadow: 0 10px 30px rgba(240,180,41,.25); transform: scale(1.03); }
+.price-card.featured { border-color: var(--gold); box-shadow: 0 10px 30px rgba(255,196,31,.25); transform: scale(1.03); }
 .price-card h3 { color: var(--green); font-size: 19px; margin-bottom: 10px; }
 .price { font-size: 42px; font-weight: 800; color: var(--ink); }
 .price span { font-size: 17px; font-weight: 500; color: var(--muted); }
@@ -93,11 +95,11 @@ a { text-decoration: none; }
 .bundle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
 .bundle { background: var(--green); color: #fff; border-radius: var(--radius); padding: 34px 28px; position: relative; overflow: hidden; }
 .bundle:nth-child(2) { background: var(--green-dark); }
-.bundle:nth-child(3) { background: #14663a; }
+.bundle:nth-child(3) { background: #1E6B3C; }
 .bundle h3 { font-size: 22px; margin-bottom: 6px; }
 .bundle .count { color: var(--gold); font-weight: 700; font-size: 15px; margin-bottom: 10px; }
 .bundle p { opacity: .88; font-size: 15px; }
-.tag { position: absolute; top: 18px; right: -34px; transform: rotate(38deg); background: var(--gold); color: var(--green-dark); font-size: 12px; font-weight: 800; padding: 4px 40px; letter-spacing: 1px; }
+.tag { position: absolute; top: 18px; right: -34px; transform: rotate(38deg); background: var(--red); color: #fff; font-size: 12px; font-weight: 800; padding: 4px 40px; letter-spacing: 1px; }
 
 /* Form */
 .order-form { max-width: 720px; margin: 0 auto; background: #fff; border: 1px solid #e4eae5; border-radius: var(--radius); padding: 40px 36px; }
