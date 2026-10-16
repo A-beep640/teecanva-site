@@ -1,0 +1,22 @@
+# Redirects: old Shopify store URLs (pre-Oct 2026) -> new static site pages.
+# Netlify processes rules top-down; specific rules first, catch-alls last.
+
+# Old About page (incl. the /en-ca/ Canada locale seen in search results)
+/en-ca/pages/about-us  /about.html  301
+/pages/about-us  /about.html  301
+
+# Old Shopify collections (e.g. Sweatshirts) -> gallery, the closest new page
+/en-ca/collections/*  /gallery.html  301
+/collections/*  /gallery.html  301
+
+# Old Shopify product pages -> gallery
+/en-ca/products/*  /gallery.html  301
+/products/*  /gallery.html  301
+
+# Any other old Shopify info pages -> homepage
+/en-ca/pages/*  /  301
+/pages/*  /  301
+
+# Old locale homepage + any remaining old locale URL -> homepage
+/en-ca  /  301
+/en-ca/*  /  301
