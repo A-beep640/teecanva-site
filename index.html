@@ -150,6 +150,9 @@
     </div>
     <div class="form-row">
       <label>Phone (optional)<input type="tel" name="phone" placeholder="(555) 123-4567"></label>
+      <label>Organization / School name<input type="text" name="organization" placeholder="e.g. Thomas Jefferson HS PTA"></label>
+    </div>
+    <div class="form-row">
       <label>Group type
         <select name="group-type" required>
           <option value="">Select…</option>
@@ -161,12 +164,13 @@
           <option>Other</option>
         </select>
       </label>
+      <label>Approx. headcount<input type="number" name="headcount" min="12" placeholder="50"></label>
     </div>
     <div class="form-row">
-      <label>Approx. headcount<input type="number" name="headcount" min="12" placeholder="50"></label>
       <label>Date needed<input type="date" name="date-needed"></label>
     </div>
     <label>Tell us about your design idea<textarea name="details" rows="4" placeholder="e.g. Senior class of 2027, gold and green, mascot on front…"></textarea></label>
+    <label class="opt-in"><input type="checkbox" name="marketing-opt-in" value="yes"> Yes, email me about new Teecanva designs and offers.</label>
     <button type="submit" class="btn btn-gold btn-lg">Request My Quote</button>
   </form>
 </section>
