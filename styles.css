@@ -112,6 +112,8 @@ a { text-decoration: none; }
 .order-form input:focus, .order-form select:focus, .order-form textarea:focus { outline: none; border-color: var(--green); background: #fff; }
 .order-form textarea { resize: vertical; }
 .order-form .btn { width: 100%; margin-top: 6px; }
+.order-form .opt-in { display: flex; align-items: flex-start; gap: 10px; font-weight: 400; font-size: 14.5px; color: var(--muted); margin-bottom: 22px; cursor: pointer; }
+.order-form .opt-in input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); flex-shrink: 0; }
 .hidden { display: none; }
 
 /* Footer */
