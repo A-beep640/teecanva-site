@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teecanva Design Lab — Design Your Own Shirt | Forney, TX</title>
+<meta name="description" content="Teecanva Design Lab: pick a shirt, add text and your own artwork, arrange layers, download a proof, and send it with a corporate quote.">
+<link rel="canonical" href="https://teecanva.com/design-lab.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Teecanva Design Lab — Design Your Own Shirt">
+<meta property="og:description" content="Pick a shirt, add text and artwork, arrange layers, download a proof, and request a quote.">
+<meta property="og:url" content="https://teecanva.com/design-lab.html">
+<meta property="og:image" content="https://teecanva.com/logo.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="logo.png">
+<style>
+.lab{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start}
+.panel{background:#fff;border:1px solid #e4eae5;border-radius:14px;padding:22px}
+.panel h3{margin:0 0 12px;font-size:17px}
+.panel label{display:block;font-weight:600;font-size:14px;margin:14px 0 4px}
+.panel input[type=text],.panel input[type=number],.panel select{width:100%;padding:10px 12px;font-size:15px;border:2px solid #dfe7e0;border-radius:10px;font-family:inherit}
+.panel input[type=range]{width:100%}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatch{width:40px;height:40px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #ccc;cursor:pointer}
+.swatch.active{box-shadow:0 0 0 3px #165B33}
+.viewbtns{display:flex;gap:8px}
+.viewbtns button{flex:1;padding:10px;border:2px solid #dfe7e0;border-radius:10px;background:#fff;font-weight:700;cursor:pointer}
+.viewbtns button.active{background:#165B33;color:#fff;border-color:#165B33}
+.toolrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toolrow button{padding:9px 12px;border:2px solid #dfe7e0;border-radius:10px;background:#fff;font-weight:700;cursor:pointer}
+.layers{list-style:none;padding:0;margin:10px 0}
+.layers li{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid #e4eae5;border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:14px}
+.layers li.sel{background:#eef5ef;border-color:#165B33}
+.canvaswrap{background:#fff;border:1px solid #e4eae5;border-radius:14px;padding:20px;text-align:center}
+#labCanvas{max-width:100%;height:auto;background:#f4f6f4;border-radius:10px;touch-action:none;cursor:grab}
+#labCanvas:active{cursor:grabbing}
+.hint{font-size:13.5px;color:#555;margin-top:10px}
+.pricebox{background:#FFFDF7;border:1px solid #e4eae5;border-radius:10px;padding:14px;margin-top:14px;font-size:15px}
+@media(max-width:900px){.lab{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="index.html"><img src="logo.png" alt="Teecanva logo"><span>TEECANVA</span></a>
+  <nav class="links">
+    <a href="index.html#services">Services</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="corporate.html">Corporate</a>
+    <a href="corporate.html#quote" class="btn btn-gold">Get a Quote</a>
+  </nav>
+  <button class="menu-toggle" aria-label="Menu" onclick="document.querySelector('.links').classList.toggle('open')">☰</button>
+</header>
+
+<section class="page-hero">
+  <h1>Teecanva Design Lab</h1>
+  <p class="page-sub">Design your own shirt like the big print shops — pick a shirt, add text and artwork, move layers around, download the proof, and send it with your quote.</p>
+</section>
+
+<section class="section">
+<div class="lab">
+  <div>
+    <div class="panel">
+      <h3>1 · Shirt</h3>
+      <label>Product</label>
+      <select id="product"><option>T-Shirt — short sleeve</option><option>Polo shirt</option><option>Long-sleeve tee</option></select>
+      <label>Shirt color</label>
+      <div class="swatches" id="swatches">
+        <button type="button" class="swatch active" data-color="#FFFDF7" data-name="Ceramic White" style="background:#FFFDF7" aria-label="Ceramic White"></button>
+        <button type="button" class="swatch" data-color="#000000" data-name="Black" style="background:#000" aria-label="Black"></button>
+        <button type="button" class="swatch" data-color="#165B33" data-name="Brand Green" style="background:#165B33" aria-label="Brand Green"></button>
+        <button type="button" class="swatch" data-color="#FFC41F" data-name="Mango Yellow" style="background:#FFC41F" aria-label="Mango Yellow"></button>
+        <button type="button" class="swatch" data-color="#BF2121" data-name="Firebrick Red" style="background:#BF2121" aria-label="Firebrick Red"></button>
+      </div>
+      <p class="hint" id="colorName">Ceramic White</p>
+      <label>Side</label>
+      <div class="viewbtns"><button type="button" id="btnFront" class="active">Front</button><button type="button" id="btnBack">Back</button></div>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h3>2 · Add text</h3>
+      <label>Your text<input type="text" id="textInput" placeholder="e.g. Thomas Jefferson HS" maxlength="40"></label>
+      <label>Font<select id="fontSel"><option value="Arial Black, Arial, sans-serif">Bold Sans</option><option value="Georgia, serif">Serif</option><option value="Courier New, monospace">Typewriter</option><option value="Comic Sans MS, cursive">Playful</option></select></label>
+      <label>Text color<input type="color" id="textColor" value="#165B33"></label>
+      <label>Size <span id="sizeVal">64</span>px<input type="range" id="textSize" min="24" max="140" value="64"></label>
+      <div class="toolrow"><button type="button" id="addText">Add text to shirt</button><button type="button" id="addLogo">Add TC logo</button></div>
+      <label>Upload your own artwork (PNG / JPG)<input type="file" id="upload" accept="image/*"></label>
+      <p class="hint">Tip: only upload artwork you own or have permission to print. Drag anything on the shirt to move it.</p>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h3>3 · Selected layer</h3>
+      <p class="hint" id="selInfo">Click an item on the shirt to select it.</p>
+      <label>Rotate <span id="rotVal">0°</span><input type="range" id="rot" min="-180" max="180" value="0"></label>
+      <label>Scale <span id="scaleVal">100%</span><input type="range" id="scale" min="30" max="200" value="100"></label>
+      <div class="toolrow">
+        <button type="button" id="bringFwd">Bring forward</button>
+        <button type="button" id="sendBack">Send backward</button>
+        <button type="button" id="duplicate">Duplicate</button>
+        <button type="button" id="deleteObj">Delete</button>
+      </div>
+      <label>Layers (top first)</label>
+      <ul class="layers" id="layers"></ul>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <h3>4 · Proof &amp; quote</h3>
+      <label>Quantity (for estimate)<input type="number" id="qty" min="12" value="50"></label>
+      <div class="pricebox" id="priceBox"></div>
+      <div class="toolrow">
+        <button type="button" id="downloadProof" class="btn btn-green">Download proof (PNG)</button>
+        <button type="button" id="saveDesign">Save design</button>
+      </div>
+      <p class="hint">Saved designs stay in this browser. To order, download the proof and send it with the <a href="corporate.html#quote">corporate quote form</a>, noting “Design Lab proof attached.” This is a preview proof — final print files are delivered after you approve a design.</p>
+    </div>
+  </div>
+
+  <div class="canvaswrap">
+    <canvas id="labCanvas" width="760" height="760"></canvas>
+    <p class="hint">Dashed box = print area. Click an item to select it, drag to move it. Front and Back are separate designs.</p>
+    <p class="hint" id="viewLabel">Front · Ceramic White · T-Shirt — short sleeve</p>
+  </div>
+</div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand"><img src="teecanva-logo-1color-white.png" alt="Teecanva logo"><div><strong>TEECANVA</strong><br><span>Custom Apparel &amp; Design Studio</span></div></div>
+    <div class="foot-links"><a href="index.html#services">Services</a><a href="gallery.html">Gallery</a><a href="corporate.html">Corporate</a><a href="corporate.html#quote">Get a Quote</a></div>
+    <div class="foot-contact"><a href="https://www.instagram.com/officialteecanva/">@officialteecanva</a><br><span>Forney, Texas</span></div>
+  </div>
+  <p class="copy">© 2026 Teecanva. All rights reserved.</p>
+</footer>
+
+<script>
+const canvas=document.getElementById('labCanvas'),ctx=canvas.getContext('2d');
+let shirt='#FFFDF7',shirtName='Ceramic White',view='Front';
+let layers={Front:[],Back:[]},sel=-1,drag=null;
+const logoImg=new Image(); logoImg.src='teecanva-logo-1color-green.png';
+const logoWhite=new Image(); logoWhite.src='teecanva-logo-1color-white.png';
+function ink(){return shirt==='#FFFDF7'||shirt==='#FFC41F' ? '#165B33' : '#FFFFFF'}
+function cur(){return layers[view]}
+function drawShirt(){
+  ctx.clearRect(0,0,760,760);
+  ctx.fillStyle='#f4f6f4'; ctx.fillRect(0,0,760,760);
+  ctx.fillStyle=shirt; ctx.strokeStyle='#c9d2c9'; ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.moveTo(270,120); ctx.quadraticCurveTo(330,90,380,90); ctx.quadraticCurveTo(430,90,490,120);
+  ctx.lineTo(590,170); ctx.lineTo(540,270); ctx.lineTo(520,250); ctx.lineTo(520,640);
+  ctx.lineTo(240,640); ctx.lineTo(240,250); ctx.lineTo(220,270); ctx.lineTo(170,170); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.setLineDash([8,8]); ctx.strokeStyle='#999'; ctx.strokeRect(280,210,200,280); ctx.setLineDash([]);
+  ctx.fillStyle='#555'; ctx.font='16px Arial'; ctx.textAlign='center'; ctx.fillText(view+' print area',380,200);
+  cur().forEach((o,i)=>{
+    ctx.save(); ctx.translate(o.x,o.y); ctx.rotate(o.rot*Math.PI/180);
+    if(o.type==='text'){ctx.fillStyle=o.color; ctx.font=(o.bold?'800 ':'')+o.size+'px '+o.font; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(o.text,0,0);}
+    else if(o.img&&o.img.complete){const w=o.w*o.scale,h=o.h*o.scale; ctx.drawImage(o.img,-w/2,-h/2,w,h);}
+    if(i===sel){ctx.strokeStyle='#165B33'; ctx.lineWidth=2; ctx.strokeRect(-110,-70,220,140);}
+    ctx.restore();
+  });
+}
+function renderLayers(){
+  const ul=document.getElementById('layers'); ul.innerHTML='';
+  [...cur()].reverse().forEach((o,ri)=>{
+    const idx=cur().length-1-ri,li=document.createElement('li');
+    li.textContent=o.type==='text'?o.text:o.label||'Artwork'; if(idx===sel)li.classList.add('sel');
+    li.onclick=()=>{sel=idx; syncSel(); drawShirt(); renderLayers();};
+    ul.appendChild(li);
+  });
+  document.getElementById('selInfo').textContent=sel>=0?(cur()[sel].type==='text'?cur()[sel].text:(cur()[sel].label||'Artwork')):'Click an item on the shirt to select it.';
+}
+function syncSel(){
+  if(sel<0)return; const o=cur()[sel];
+  document.getElementById('rot').value=o.rot||0; document.getElementById('rotVal').textContent=(o.rot||0)+'°';
+  document.getElementById('scale').value=Math.round((o.scale||1)*100); document.getElementById('scaleVal').textContent=Math.round((o.scale||1)*100)+'%';
+}
+function price(){
+  const q=parseInt(document.getElementById('qty').value||50,10);
+  const unit=q>=100?10:q>=50?12:q>=24?14:16, fee=q>=50?0:95;
+  document.getElementById('priceBox').innerHTML='<strong>Estimate:</strong> '+q+' shirts × from $'+unit+' = from $'+(q*unit).toLocaleString()+(fee?' + $95 design fee':' + design fee waived (50+)')+'<br><span style="color:#555">Starting prices only — final quote depends on garment, colors, and print locations.</span>';
+}
+function redraw(){drawShirt(); renderLayers(); price(); document.getElementById('viewLabel').textContent=view+' · '+shirtName+' · '+document.getElementById('product').value;}
+document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  shirt=b.dataset.color; shirtName=b.dataset.name; document.getElementById('colorName').textContent=shirtName; redraw();
+}));
+document.getElementById('btnFront').onclick=()=>{view='Front'; sel=-1; document.getElementById('btnFront').classList.add('active'); document.getElementById('btnBack').classList.remove('active'); redraw();};
+document.getElementById('btnBack').onclick=()=>{view='Back'; sel=-1; document.getElementById('btnBack').classList.add('active'); document.getElementById('btnFront').classList.remove('active'); redraw();};
+document.getElementById('textSize').oninput=e=>document.getElementById('sizeVal').textContent=e.target.value;
+document.getElementById('addText').onclick=()=>{
+  const t=document.getElementById('textInput').value.trim(); if(!t){alert('Type your text first.'); return;}
+  cur().push({type:'text',text:t,font:document.getElementById('fontSel').value,color:document.getElementById('textColor').value,size:parseInt(document.getElementById('textSize').value,10),bold:true,x:380,y:320,rot:0,scale:1});
+  sel=cur().length-1; syncSel(); redraw();
+};
+document.getElementById('addLogo').onclick=()=>{
+  const img=shirt==='#FFFDF7'||shirt==='#FFC41F'?logoImg:logoWhite;
+  cur().push({type:'image',label:'TC logo',img:img,w:160,h:149,x:380,y:300,rot:0,scale:1});
+  sel=cur().length-1; syncSel(); redraw();
+};
+document.getElementById('upload').onchange=e=>{
+  const f=e.target.files[0]; if(!f)return; const img=new Image();
+  img.onload=()=>{cur().push({type:'image',label:f.name,img:img,w:200,h:200*img.height/img.width,x:380,y:320,rot:0,scale:1}); sel=cur().length-1; syncSel(); redraw();};
+  img.src=URL.createObjectURL(f);
+};
+canvas.addEventListener('pointerdown',e=>{
+  const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*760/r.width,y=(e.clientY-r.top)*760/r.height;
+  sel=-1;
+  for(let i=cur().length-1;i>=0;i--){const o=cur()[i]; if(Math.abs(x-o.x)<120&&Math.abs(y-o.y)<80){sel=i; drag={dx:x-o.x,dy:y-o.y}; break;}}
+  canvas.setPointerCapture(e.pointerId); syncSel(); redraw();
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!drag||sel<0)return; const r=canvas.getBoundingClientRect();
+  cur()[sel].x=(e.clientX-r.left)*760/r.width-drag.dx; cur()[sel].y=(e.clientY-r.top)*760/r.height-drag.dy; drawShirt();
+});
+canvas.addEventListener('pointerup',()=>{drag=null;});
+document.getElementById('rot').oninput=e=>{if(sel>=0){cur()[sel].rot=parseInt(e.target.value,10); document.getElementById('rotVal').textContent=e.target.value+'°'; drawShirt();}};
+document.getElementById('scale').oninput=e=>{if(sel>=0){cur()[sel].scale=parseInt(e.target.value,10)/100; document.getElementById('scaleVal').textContent=e.target.value+'%'; drawShirt();}};
+document.getElementById('bringFwd').onclick=()=>{if(sel<cur().length-1){const o=cur().splice(sel,1)[0]; cur().splice(sel+1,0,o); sel++; redraw();}};
+document.getElementById('sendBack').onclick=()=>{if(sel>0){const o=cur().splice(sel,1)[0]; cur().splice(sel-1,0,o); sel--; redraw();}};
+document.getElementById('duplicate').onclick=()=>{if(sel>=0){const o=Object.assign({},cur()[sel],{x:cur()[sel].x+20,y:cur()[sel].y+20}); cur().push(o); sel=cur().length-1; redraw();}};
+document.getElementById('deleteObj').onclick=()=>{if(sel>=0){cur().splice(sel,1); sel=-1; redraw();}};
+document.getElementById('qty').oninput=price;
+document.getElementById('product').onchange=redraw;
+document.getElementById('downloadProof').onclick=()=>{
+  sel=-1; drawShirt();
+  const a=document.createElement('a'); a.download='teecanva-design-lab-proof.png'; a.href=canvas.toDataURL('image/png'); a.click();
+};
+document.getElementById('saveDesign').onclick=()=>{
+  try{localStorage.setItem('teecanva-design-lab',JSON.stringify({shirt,shirtName,Front:layers.Front.map(strip),Back:layers.Back.map(strip)})); alert('Design saved in this browser.');}catch(err){alert('Could not save in this browser — download the proof instead.');}
+  function strip(o){const c={type:o.type,x:o.x,y:o.y,rot:o.rot,scale:o.scale}; if(o.type==='text'){c.text=o.text;c.font=o.font;c.color=o.color;c.size=o.size;} else {c.label=o.label;} return c;}
+};
+logoImg.onload=redraw; logoWhite.onload=redraw;
+redraw();
+</script>
+</body>
+</html>
