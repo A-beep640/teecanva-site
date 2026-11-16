@@ -31,6 +31,8 @@
 .layers{list-style:none;padding:0;margin:10px 0}
 .layers li{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid #e4eae5;border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:14px}
 .layers li.sel{background:#eef5ef;border-color:#165B33}
+.layers li button{border:none;background:none;font-size:18px;line-height:1;cursor:pointer;color:#BF2121;padding:2px 6px}
+.toolrow button:disabled{opacity:.45;cursor:default}
 .canvaswrap{background:#fff;border:1px solid #e4eae5;border-radius:14px;padding:20px;text-align:center}
 #labCanvas{max-width:100%;height:auto;background:#f4f6f4;border-radius:10px;touch-action:none;cursor:grab}
 #labCanvas:active{cursor:grabbing}
@@ -85,11 +87,14 @@
       <div class="toolrow"><button type="button" id="addText">Add text to shirt</button><button type="button" id="addLogo">Add TC logo</button></div>
       <label>Upload your own artwork (PNG / JPG)<input type="file" id="upload" accept="image/*"></label>
       <p class="hint">Tip: only upload artwork you own or have permission to print. Drag anything on the shirt to move it.</p>
+      <p class="hint" id="editHint">These fields add new text. Click an item on the shirt to select and edit it.</p>
     </div>
 
     <div class="panel" style="margin-top:18px">
       <h3>3 · Selected layer</h3>
       <p class="hint" id="selInfo">Click an item on the shirt to select it.</p>
+      <div class="toolrow"><button type="button" id="undoBtn">⟲ Undo</button><button type="button" id="redoBtn">⟳ Redo</button><button type="button" id="clearSide">Clear this side</button></div>
+      <p class="hint">Shortcuts: Ctrl+Z undo · Ctrl+Y redo · Delete key removes the selected layer.</p>
       <label>Rotate <span id="rotVal">0°</span><input type="range" id="rot" min="-180" max="180" value="0"></label>
       <label>Scale <span id="scaleVal">100%</span><input type="range" id="scale" min="30" max="200" value="100"></label>
       <div class="toolrow">
@@ -108,7 +113,7 @@
       <div class="pricebox" id="priceBox"></div>
       <div class="toolrow">
         <button type="button" id="downloadProof" class="btn btn-green">Download proof (PNG)</button>
-        <button type="button" id="saveDesign">Save design</button>
+        <button type="button" id="saveDesign">Save design</button><button type="button" id="loadDesign">Load saved</button>
       </div>
       <p class="hint">Saved designs stay in this browser. To order, download the proof and send it with the <a href="corporate.html#quote">corporate quote form</a>, noting “Design Lab proof attached.” This is a preview proof — final print files are delivered after you approve a design.</p>
     </div>
@@ -137,6 +142,18 @@ let shirt='#FFFDF7',shirtName='Ceramic White',view='Front';
 let layers={Front:[],Back:[]},sel=-1,drag=null;
 const logoImg=new Image(); logoImg.src='teecanva-logo-1color-green.png';
 const logoWhite=new Image(); logoWhite.src='teecanva-logo-1color-white.png';
+/* --- Undo / redo history (snapshots of both sides' layers) --- */
+let hist=[],hpos=-1;
+function ser(o){const c={type:o.type,x:o.x,y:o.y,rot:o.rot||0,scale:o.scale||1};if(o.type==='text'){c.text=o.text;c.font=o.font;c.color=o.color;c.size=o.size;c.bold=!!o.bold;}else{c.label=o.label||'Artwork';c.w=o.w;c.h=o.h;c.src=o.img?o.img.src:'';}return c;}
+function de(o){const c=Object.assign({},o);if(c.type==='image'){const im=new Image();im.onload=function(){drawShirt();};im.src=c.src||'';c.img=im;delete c.src;}return c;}
+function snap(){return JSON.stringify({Front:layers.Front.map(ser),Back:layers.Back.map(ser)});}
+function pushHist(){hist=hist.slice(0,hpos+1);hist.push(snap());if(hist.length>60)hist.shift();hpos=hist.length-1;syncUndo();}
+function applyHist(){try{const s=JSON.parse(hist[hpos]);layers.Front=s.Front.map(de);layers.Back=s.Back.map(de);}catch(e){}sel=-1;syncUndo();redraw();}
+function doUndo(){if(hpos>0){hpos--;applyHist();}}
+function doRedo(){if(hpos<hist.length-1){hpos++;applyHist();}}
+function syncUndo(){const u=document.getElementById('undoBtn'),r=document.getElementById('redoBtn');if(u)u.disabled=hpos<=0;if(r)r.disabled=hpos>=hist.length-1;}
+function measure(o){let hw=110,hh=70;if(o.type==='text'){ctx.font=(o.bold?'800 ':'')+Math.round(o.size*(o.scale||1))+'px '+o.font;hw=ctx.measureText(o.text||' ').width/2+12;hh=(o.size*(o.scale||1))/2+14;}else{hw=(o.w*(o.scale||1))/2+10;hh=(o.h*(o.scale||1))/2+10;}return{hw:hw,hh:hh};}
+function hit(o,x,y){const rad=-(o.rot||0)*Math.PI/180,dx=x-o.x,dy=y-o.y;const lx=dx*Math.cos(rad)-dy*Math.sin(rad),ly=dx*Math.sin(rad)+dy*Math.cos(rad);const b=measure(o);return Math.abs(lx)<b.hw&&Math.abs(ly)<b.hh;}
 function ink(){return shirt==='#FFFDF7'||shirt==='#FFC41F' ? '#165B33' : '#FFFFFF'}
 function cur(){return layers[view]}
 function drawShirt(){
@@ -152,9 +169,9 @@ function drawShirt(){
   ctx.fillStyle='#555'; ctx.font='16px Arial'; ctx.textAlign='center'; ctx.fillText(view+' print area',380,200);
   cur().forEach((o,i)=>{
     ctx.save(); ctx.translate(o.x,o.y); ctx.rotate(o.rot*Math.PI/180);
-    if(o.type==='text'){ctx.fillStyle=o.color; ctx.font=(o.bold?'800 ':'')+o.size+'px '+o.font; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(o.text,0,0);}
-    else if(o.img&&o.img.complete){const w=o.w*o.scale,h=o.h*o.scale; ctx.drawImage(o.img,-w/2,-h/2,w,h);}
-    if(i===sel){ctx.strokeStyle='#165B33'; ctx.lineWidth=2; ctx.strokeRect(-110,-70,220,140);}
+    if(o.type==='text'){ctx.fillStyle=o.color; ctx.font=(o.bold?'800 ':'')+Math.round(o.size*(o.scale||1))+'px '+o.font; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(o.text,0,0);}
+    else if(o.img&&o.img.complete){const w=o.w*(o.scale||1),h=o.h*(o.scale||1); ctx.drawImage(o.img,-w/2,-h/2,w,h);}
+    if(i===sel){const b=measure(o); ctx.strokeStyle='#165B33'; ctx.lineWidth=2; ctx.strokeRect(-b.hw,-b.hh,b.hw*2,b.hh*2);}
     ctx.restore();
   });
 }
@@ -162,16 +179,29 @@ function renderLayers(){
   const ul=document.getElementById('layers'); ul.innerHTML='';
   [...cur()].reverse().forEach((o,ri)=>{
     const idx=cur().length-1-ri,li=document.createElement('li');
-    li.textContent=o.type==='text'?o.text:o.label||'Artwork'; if(idx===sel)li.classList.add('sel');
+    const nm=document.createElement('span'); nm.textContent=o.type==='text'?o.text:o.label||'Artwork'; li.appendChild(nm);
+    if(idx===sel)li.classList.add('sel');
     li.onclick=()=>{sel=idx; syncSel(); drawShirt(); renderLayers();};
+    const x=document.createElement('button'); x.type='button'; x.textContent='×'; x.title='Delete this layer'; x.setAttribute('aria-label','Delete layer');
+    x.onclick=(ev)=>{ev.stopPropagation(); cur().splice(idx,1); sel=-1; pushHist(); redraw();};
+    li.appendChild(x);
     ul.appendChild(li);
   });
   document.getElementById('selInfo').textContent=sel>=0?(cur()[sel].type==='text'?cur()[sel].text:(cur()[sel].label||'Artwork')):'Click an item on the shirt to select it.';
 }
 function syncSel(){
-  if(sel<0)return; const o=cur()[sel];
+  const hint=document.getElementById('editHint');
+  if(sel<0){if(hint)hint.textContent='These fields add new text. Click an item on the shirt to select and edit it.';return;}
+  const o=cur()[sel];
   document.getElementById('rot').value=o.rot||0; document.getElementById('rotVal').textContent=(o.rot||0)+'°';
   document.getElementById('scale').value=Math.round((o.scale||1)*100); document.getElementById('scaleVal').textContent=Math.round((o.scale||1)*100)+'%';
+  if(o.type==='text'){
+    document.getElementById('textInput').value=o.text;
+    document.getElementById('fontSel').value=o.font;
+    document.getElementById('textColor').value=o.color;
+    document.getElementById('textSize').value=o.size; document.getElementById('sizeVal').textContent=o.size;
+    if(hint)hint.textContent='Editing the selected text — change the fields above to update it. Click empty space on the shirt to add new text instead.';
+  } else if(hint) hint.textContent='An image is selected — the fields above are for new text.';
 }
 function price(){
   const q=parseInt(document.getElementById('qty').value||50,10);
@@ -185,39 +215,58 @@ document.querySelectorAll('.swatch').forEach(b=>b.addEventListener('click',()=>{
 }));
 document.getElementById('btnFront').onclick=()=>{view='Front'; sel=-1; document.getElementById('btnFront').classList.add('active'); document.getElementById('btnBack').classList.remove('active'); redraw();};
 document.getElementById('btnBack').onclick=()=>{view='Back'; sel=-1; document.getElementById('btnBack').classList.add('active'); document.getElementById('btnFront').classList.remove('active'); redraw();};
-document.getElementById('textSize').oninput=e=>document.getElementById('sizeVal').textContent=e.target.value;
+document.getElementById('textSize').oninput=e=>{document.getElementById('sizeVal').textContent=e.target.value; if(sel>=0&&cur()[sel].type==='text'){cur()[sel].size=parseInt(e.target.value,10); drawShirt();}};
+document.getElementById('textSize').onchange=()=>{if(sel>=0&&cur()[sel].type==='text')pushHist();};
+function editSelectedText(){
+  if(sel<0||cur()[sel].type!=='text')return false;
+  const o=cur()[sel];
+  o.text=document.getElementById('textInput').value;
+  o.font=document.getElementById('fontSel').value;
+  o.color=document.getElementById('textColor').value;
+  drawShirt(); renderLayers(); return true;
+}
+document.getElementById('textInput').oninput=editSelectedText;
+document.getElementById('fontSel').oninput=editSelectedText;
+document.getElementById('textColor').oninput=editSelectedText;
+document.getElementById('textInput').onchange=()=>{if(sel>=0&&cur()[sel].type==='text')pushHist();};
+document.getElementById('fontSel').onchange=()=>{if(sel>=0&&cur()[sel].type==='text')pushHist();};
+document.getElementById('textColor').onchange=()=>{if(sel>=0&&cur()[sel].type==='text')pushHist();};
 document.getElementById('addText').onclick=()=>{
   const t=document.getElementById('textInput').value.trim(); if(!t){alert('Type your text first.'); return;}
   cur().push({type:'text',text:t,font:document.getElementById('fontSel').value,color:document.getElementById('textColor').value,size:parseInt(document.getElementById('textSize').value,10),bold:true,x:380,y:320,rot:0,scale:1});
-  sel=cur().length-1; syncSel(); redraw();
+  sel=cur().length-1; pushHist(); syncSel(); redraw();
 };
 document.getElementById('addLogo').onclick=()=>{
   const img=shirt==='#FFFDF7'||shirt==='#FFC41F'?logoImg:logoWhite;
   cur().push({type:'image',label:'TC logo',img:img,w:160,h:149,x:380,y:300,rot:0,scale:1});
-  sel=cur().length-1; syncSel(); redraw();
+  sel=cur().length-1; pushHist(); syncSel(); redraw();
 };
 document.getElementById('upload').onchange=e=>{
-  const f=e.target.files[0]; if(!f)return; const img=new Image();
-  img.onload=()=>{cur().push({type:'image',label:f.name,img:img,w:200,h:200*img.height/img.width,x:380,y:320,rot:0,scale:1}); sel=cur().length-1; syncSel(); redraw();};
-  img.src=URL.createObjectURL(f);
+  const f=e.target.files[0]; if(!f)return; const rd=new FileReader();
+  rd.onload=()=>{const img=new Image();
+    img.onload=()=>{cur().push({type:'image',label:f.name,img:img,w:200,h:200*img.height/img.width,x:380,y:320,rot:0,scale:1}); sel=cur().length-1; pushHist(); syncSel(); redraw();};
+    img.src=rd.result;};
+  rd.readAsDataURL(f);
 };
 canvas.addEventListener('pointerdown',e=>{
   const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*760/r.width,y=(e.clientY-r.top)*760/r.height;
   sel=-1;
-  for(let i=cur().length-1;i>=0;i--){const o=cur()[i]; if(Math.abs(x-o.x)<120&&Math.abs(y-o.y)<80){sel=i; drag={dx:x-o.x,dy:y-o.y}; break;}}
+  for(let i=cur().length-1;i>=0;i--){const o=cur()[i]; if(hit(o,x,y)){sel=i; drag={dx:x-o.x,dy:y-o.y,ox:o.x,oy:o.y}; break;}}
   canvas.setPointerCapture(e.pointerId); syncSel(); redraw();
 });
 canvas.addEventListener('pointermove',e=>{
   if(!drag||sel<0)return; const r=canvas.getBoundingClientRect();
   cur()[sel].x=(e.clientX-r.left)*760/r.width-drag.dx; cur()[sel].y=(e.clientY-r.top)*760/r.height-drag.dy; drawShirt();
 });
-canvas.addEventListener('pointerup',()=>{drag=null;});
+canvas.addEventListener('pointerup',()=>{if(drag&&sel>=0){const o=cur()[sel]; if(o&&(o.x!==drag.ox||o.y!==drag.oy))pushHist();} drag=null;});
 document.getElementById('rot').oninput=e=>{if(sel>=0){cur()[sel].rot=parseInt(e.target.value,10); document.getElementById('rotVal').textContent=e.target.value+'°'; drawShirt();}};
 document.getElementById('scale').oninput=e=>{if(sel>=0){cur()[sel].scale=parseInt(e.target.value,10)/100; document.getElementById('scaleVal').textContent=e.target.value+'%'; drawShirt();}};
-document.getElementById('bringFwd').onclick=()=>{if(sel<cur().length-1){const o=cur().splice(sel,1)[0]; cur().splice(sel+1,0,o); sel++; redraw();}};
-document.getElementById('sendBack').onclick=()=>{if(sel>0){const o=cur().splice(sel,1)[0]; cur().splice(sel-1,0,o); sel--; redraw();}};
-document.getElementById('duplicate').onclick=()=>{if(sel>=0){const o=Object.assign({},cur()[sel],{x:cur()[sel].x+20,y:cur()[sel].y+20}); cur().push(o); sel=cur().length-1; redraw();}};
-document.getElementById('deleteObj').onclick=()=>{if(sel>=0){cur().splice(sel,1); sel=-1; redraw();}};
+document.getElementById('rot').onchange=()=>{if(sel>=0)pushHist();};
+document.getElementById('scale').onchange=()=>{if(sel>=0)pushHist();};
+document.getElementById('bringFwd').onclick=()=>{if(sel<cur().length-1){const o=cur().splice(sel,1)[0]; cur().splice(sel+1,0,o); sel++; pushHist(); redraw();}};
+document.getElementById('sendBack').onclick=()=>{if(sel>0){const o=cur().splice(sel,1)[0]; cur().splice(sel-1,0,o); sel--; pushHist(); redraw();}};
+document.getElementById('duplicate').onclick=()=>{if(sel>=0){const o=Object.assign({},cur()[sel],{x:cur()[sel].x+20,y:cur()[sel].y+20}); cur().push(o); sel=cur().length-1; pushHist(); redraw();}};
+document.getElementById('deleteObj').onclick=()=>{if(sel>=0){cur().splice(sel,1); sel=-1; pushHist(); redraw();}};
 document.getElementById('qty').oninput=price;
 document.getElementById('product').onchange=redraw;
 document.getElementById('downloadProof').onclick=()=>{
@@ -225,11 +274,31 @@ document.getElementById('downloadProof').onclick=()=>{
   const a=document.createElement('a'); a.download='teecanva-design-lab-proof.png'; a.href=canvas.toDataURL('image/png'); a.click();
 };
 document.getElementById('saveDesign').onclick=()=>{
-  try{localStorage.setItem('teecanva-design-lab',JSON.stringify({shirt,shirtName,Front:layers.Front.map(strip),Back:layers.Back.map(strip)})); alert('Design saved in this browser.');}catch(err){alert('Could not save in this browser — download the proof instead.');}
-  function strip(o){const c={type:o.type,x:o.x,y:o.y,rot:o.rot,scale:o.scale}; if(o.type==='text'){c.text=o.text;c.font=o.font;c.color=o.color;c.size=o.size;} else {c.label=o.label;} return c;}
+  try{localStorage.setItem('teecanva-design-lab',JSON.stringify({shirt,shirtName,Front:layers.Front.map(ser),Back:layers.Back.map(ser)})); alert('Design saved in this browser.');}catch(err){alert('Could not save in this browser — download the proof instead.');}
 };
+document.getElementById('loadDesign').onclick=()=>{
+  try{const raw=localStorage.getItem('teecanva-design-lab'); if(!raw){alert('No saved design in this browser yet.'); return;}
+    const s=JSON.parse(raw); shirt=s.shirt||shirt; shirtName=s.shirtName||shirtName;
+    layers.Front=(s.Front||[]).map(de); layers.Back=(s.Back||[]).map(de);
+    document.querySelectorAll('.swatch').forEach(x=>x.classList.toggle('active',x.dataset.color===shirt));
+    document.getElementById('colorName').textContent=shirtName;
+    sel=-1; pushHist(); redraw();}catch(err){alert('Could not load the saved design.');}
+};
+document.getElementById('undoBtn').onclick=doUndo;
+document.getElementById('redoBtn').onclick=doRedo;
+document.getElementById('clearSide').onclick=()=>{
+  if(!cur().length)return; if(!confirm('Remove everything on the '+view+' side?'))return;
+  cur().length=0; sel=-1; pushHist(); redraw();
+};
+document.addEventListener('keydown',e=>{
+  const tag=(document.activeElement&&document.activeElement.tagName)||'';
+  const typing=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';
+  if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==='z'){e.preventDefault(); doUndo(); return;}
+  if(((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y')||((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='z')){e.preventDefault(); doRedo(); return;}
+  if(!typing&&(e.key==='Delete'||e.key==='Backspace')&&sel>=0){e.preventDefault(); cur().splice(sel,1); sel=-1; pushHist(); redraw();}
+});
 logoImg.onload=redraw; logoWhite.onload=redraw;
-redraw();
+redraw(); pushHist();
 </script>
 </body>
 </html>
