@@ -1,6 +1,6 @@
 # Teecanva
 
-> Teecanva is a custom apparel and design studio in Forney, Texas, serving the Dallas–Fort Worth area. It designs custom group shirts for schools, teams, churches, and organizations, handles bulk printing, and delivers to campuses and events. It also sells educator shirt-design bundles as instant downloads.
+> Teecanva is a custom apparel and design studio in Forney, Texas, serving the Dallas–Fort Worth area. It designs custom group shirts for churches, teams, reunions, and community groups, handles bulk printing, and delivers to churches, fields, and events. It also sells educator shirt-design bundles as instant downloads.
 
 ## Key facts
 
@@ -17,11 +17,13 @@
 
 - Custom group shirts: full service — design, pre-order collection, bulk printing, and delivery. Organizers do not handle inventory or chase payments.
 - Custom design service: $95 per custom design, waived on orders of 50+ shirts. Includes 1–2 concepts within 3 days and one revision round.
+- Fundraising as a Service: zero-upfront-cost shirt fundraisers for churches, teams, PTAs, and nonprofits. Teecanva runs the pre-order; the group keeps the margin above cost. See https://teecanva.com/fundraising.html
 - Design bundles (Etsy): ready-made educator shirt designs as SVG + transparent PNG downloads.
   - SPED Teacher Pack: 20 designs
   - Teacher Life Pack: 25 designs
   - Support Staff Pack: 15 designs
-- Corporate / bulk orders: quote first, proof to approve, PO or invoice payment, tax-exempt handling for schools on request, and print-ready files delivered at the end. See https://teecanva.com/corporate.html
+- Corporate / bulk orders: quote first, proof to approve, direct card payment (PO or invoice on request for schools), tax-exempt handling for schools on request, and print-ready files delivered at the end. See https://teecanva.com/corporate.html
+- Corporate gear for local businesses: staff shirts, event gear, and branded workwear for clinics, trade crews, gyms, and studios, with recurring orders welcome.
 
 ## Bulk pricing (starting prices; final quote depends on garment, colors, and print locations)
 
@@ -36,7 +38,7 @@
 1. Tell Teecanva your idea: group name, occasion, and rough headcount.
 2. Receive 1–2 design concepts within 3 days, with one revision round included.
 3. Collect orders with a simple order form shared with the group; no money up front from the organizer.
-4. Bulk printing locally, delivered to campus or event in about two weeks.
+4. Bulk printing locally, delivered to church, field, or event in about two weeks.
 
 ## Frequently asked questions
 
@@ -44,7 +46,7 @@
 - Turnaround: About two weeks from order close to delivery; design concepts within 3 days. Rush production is available on request.
 - Payments: For group orders, each person orders and pays individually through a shared order link; the organizer does not front money.
 - Colors: School and team colors can be matched on bulk orders.
-- Delivery: Local delivery across Dallas–Fort Worth, including direct to campus or event; shipping elsewhere in the US is available on request.
+- Delivery: Local delivery across Dallas–Fort Worth, including direct to church, field, or event; shipping elsewhere in the US is available on request.
 - Reorders: Screens and artwork are kept on file, so reorders skip setup.
 - Bundle file formats: SVG vectors plus transparent PNGs at 300 DPI.
 - Bundle licenses: Personal covers shirts and gifts for yourself; Commercial lets you sell up to 200 physical end-products made with the designs.
@@ -52,8 +54,13 @@
 ## Pages
 
 - [Home](https://teecanva.com/)
-- [For schools, teams & organizations](https://teecanva.com/corporate.html)
+- [For community groups, teams & churches](https://teecanva.com/corporate.html)
+- [Raise money with group shirts](https://teecanva.com/fundraising.html)
 - [Design gallery](https://teecanva.com/gallery.html)
+- [Design Lab](https://teecanva.com/design-lab.html)
+- [Custom group shirts in Plano, TX](https://teecanva.com/custom-group-shirts-plano.html)
+- [Custom group shirts in Frisco, TX](https://teecanva.com/custom-group-shirts-frisco.html)
+- [Custom group shirts in McKinney, TX](https://teecanva.com/custom-group-shirts-mckinney.html)
 - [FAQ](https://teecanva.com/faq.html)
 - [About](https://teecanva.com/about.html)
 - [Digital contact card](https://teecanva.com/card)
