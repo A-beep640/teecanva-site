@@ -167,6 +167,17 @@
   <div class="center"><a href="https://www.etsy.com/shop/TeecanvaStudio" class="btn btn-green btn-lg">Browse on Etsy</a></div>
 </section>
 
+<section class="section" id="events">
+  <h2>Shop by event</h2>
+  <p class="section-sub">Permanent pages for the events DFW groups order for — updated every season.</p>
+  <div class="cards">
+    <div class="card"><div class="card-icon">🎓</div><h3>Field Day Shirts</h3><p>5th grade field day shirts and class tees, sorted by class and delivered to campus.</p><a href="field-day-shirts.html" class="card-link">Field day shirts →</a></div>
+    <div class="card"><div class="card-icon">⛪</div><h3>VBS Shirts</h3><p>Vacation Bible School shirts for volunteers and kids, built around your theme.</p><a href="vbs-shirts.html" class="card-link">VBS shirts →</a></div>
+    <div class="card"><div class="card-icon">🦃</div><h3>Turkey Trot Shirts</h3><p>Race tees and volunteer shirts for Thanksgiving charity runs across DFW.</p><a href="turkey-trot-shirts.html" class="card-link">Turkey trot shirts →</a></div>
+    <div class="card"><div class="card-icon">📅</div><h3>Community Calendar</h3><p>When to order for every season — VBS, field days, 5Ks, fall festivals, and more.</p><a href="community-calendar.html" class="card-link">See the calendar →</a></div>
+  </div>
+</section>
+
 <section class="section alt" id="free-design">
   <h2>Get a free design file</h2>
   <p class="section-sub">One free community design (SVG) for your next group shirt — plus first dibs when new free designs drop.</p>
@@ -194,7 +205,7 @@
 <section class="section" id="order">
   <h2>Start your group order</h2>
   <p class="section-sub">Tell us about your group — we'll reply with concepts and a quote within 2 business days.</p>
-  <form name="group-order" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="order-form">
+  <form name="group-order" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" class="order-form">
     <input type="hidden" name="form-name" value="group-order">
     <p class="hidden"><label>Don't fill this out: <input name="bot-field"></label></p>
     <div class="form-row">
@@ -223,6 +234,7 @@
       <label>Date needed<input type="date" name="date-needed"></label>
     </div>
     <label>Tell us about your design idea<textarea name="details" rows="4" placeholder="e.g. Senior class of 2027, gold and green, mascot on front…"></textarea></label>
+    <label>Upload your logo or inspiration (optional)<input type="file" name="artwork" accept=".png,.jpg,.jpeg,.svg,.ai,.pdf"></label>
     <label class="opt-in"><input type="checkbox" name="marketing-opt-in" value="yes"> Yes, email me about new Teecanva designs and offers.</label>
     <button type="submit" class="btn btn-gold btn-lg">Request My Quote</button>
   </form>

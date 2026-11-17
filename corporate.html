@@ -153,7 +153,7 @@
 <section class="section" id="quote">
   <h2>Get a group quote</h2>
   <p class="section-sub">We'll reply with concepts and a quote within 2 business days.</p>
-  <form name="corporate-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="order-form">
+  <form name="corporate-quote" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" class="order-form">
     <input type="hidden" name="form-name" value="corporate-quote">
     <p class="hidden"><label>Don't fill this out: <input name="bot-field"></label></p>
     <div class="form-row">
@@ -185,6 +185,7 @@
     </div>
     <label class="opt-in"><input type="checkbox" name="tax-exempt" value="yes"> We are tax-exempt (schools — documentation available on request).</label>
     <label>Tell us about your order<textarea name="details" rows="4" placeholder="e.g. Church picnic, 60 shirts, proof attached / proof downloaded from the Design Studio…"></textarea></label>
+    <label>Upload your logo or inspiration (optional)<input type="file" name="artwork" accept=".png,.jpg,.jpeg,.svg,.ai,.pdf"></label>
     <button type="submit" class="btn btn-gold btn-lg">Request My Group Quote</button>
   </form>
 </section>
